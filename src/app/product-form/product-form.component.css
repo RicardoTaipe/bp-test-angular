@@ -1,0 +1,58 @@
+input[type="text"] {
+  width: 100%;
+
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+}
+
+label {
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.container {
+  width: min(85%, 650px);
+  margin-inline: auto;
+  margin-block: 2rem;
+  background-color: var(--white);
+  border-radius: 0.25rem;
+  padding-top: 1rem;
+}
+
+.form {
+  padding: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  flex: 1;
+  margin-bottom: 1rem;
+}
+
+.form__actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.form__header {
+  text-align: center;
+}
+.error .message {
+  color: var(--red);
+}
+.error input {
+  border: 1px solid var(--red);
+}
+
+@media screen and (min-width: 640px) {
+  .form-group {
+    flex-direction: row;
+    gap: 1.5rem;
+  }
+}

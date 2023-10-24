@@ -1,0 +1,51 @@
+.container {
+  width: min(85%, 1024px);
+  margin-inline: auto;
+  margin-block: 2rem;
+  background-color: var(--white);
+  border-radius: 0.25rem;
+  padding: 2rem;
+}
+
+.table-products {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 1rem;
+  border-bottom: 1px solid var(--light-blue);
+}
+
+.table-header,
+.table-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  padding-block: 1rem;
+}
+
+.table-icon {
+  width: 4rem;
+  object-fit: cover;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.table-total-items {
+  font-weight: bold;
+}
+
+input[type="text"] {
+  width: 100%;
+  max-width: 10rem;
+  flex: 0 1 auto;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+}

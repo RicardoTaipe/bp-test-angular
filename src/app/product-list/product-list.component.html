@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="table-header">
+    <input
+      #searchBox
+      id="search-box"
+      (input)="search(searchBox.value)"
+      placeholder="Search..."
+      autocomplete="off"
+    />
+    <a class="btn btn-primary" [routerLink]="'/products/form'">Agregar</a>
+  </div>
+  <div class="table-container">
+    <table class="table-products">
+      <tr>
+        <th>Logo</th>
+        <th>Nombre del producto</th>
+        <th>Descripcion</th>
+        <th>Fecha de liberación</th>
+        <th>Fecha de revisión</th>
+      </tr>
+      <tr *ngFor="let product of visibleProducts">
+        <td><img class="table-icon" [src]="product.logo" /></td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.description }}</td>
+        <td>{{ product.date_release | date : "dd/MM/YYYY" }}</td>
+        <td>{{ product.date_revision | date : "dd/MM/YYYY" }}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="table-footer">
+    <p class="table-total-items">{{ visibleProducts.length }} Resultados</p>
+    <select name="page">
+      <option value="5">5</option>
+      <option value="10">10</option>
+      <option value="20">20</option>
+    </select>
+  </div>
+</div>

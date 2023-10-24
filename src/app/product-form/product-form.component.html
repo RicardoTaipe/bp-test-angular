@@ -1,0 +1,119 @@
+<div class="container">
+  <h2 class="form__header">Formulario de Registro</h2>
+  <hr />
+  <div>
+    <form [formGroup]="productForm" (ngSubmit)="saveProduct()" class="form">
+      <div class="form-group">
+        <div class="row" [ngClass]="{ error: !validateId() }">
+          <label for="productId"><b>ID</b></label>
+          <input type="text" formControlName="id" id="productId" required />
+          <span
+            *ngIf="!validateId() && productForm.controls.id.errors?.['required']"
+            class="message"
+            >ID es requerido</span
+          >
+          <span
+            *ngIf="!validateId() && productForm.controls.id.errors?.['minlength']"
+            class="message"
+            >ID debe tener minimo 3 caracteres</span
+          >
+          <span
+            *ngIf="!validateId() && productForm.controls.id.errors?.['maxlength']"
+            class="message"
+            >ID debe tener maximo 10 caracteres</span
+          >
+        </div>
+        <div class="row" [ngClass]="{ error: !validateName() }">
+          <label for="name"><b>Nombre</b></label>
+          <input type="text" formControlName="name" id="name" required />
+          <span
+            *ngIf="!validateName() && productForm.controls.name.errors?.['required']"
+            class="message"
+            >Nombre es requerido</span
+          >
+          <span
+            *ngIf="!validateName() && productForm.controls.name.errors?.['minlength']"
+            class="message"
+            >Nombre debe tener minimo 5 caracteres</span
+          >
+          <span
+            *ngIf="!validateName() && productForm.controls.name.errors?.['maxlength']"
+            class="message"
+            >Nombre debe tener maximo 100 caracteres</span
+          >
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row" [ngClass]="{ error: !validateDescription() }">
+          <label for="description"><b>Descripcion</b></label>
+          <input
+            type="text"
+            formControlName="description"
+            id="description"
+            required
+          />
+          <span
+            *ngIf="!validateDescription() && productForm.controls.description.errors?.['required']"
+            class="message"
+            >Descripcion es requerido</span
+          >
+          <span
+            *ngIf="!validateDescription() && productForm.controls.description.errors?.['minlength']"
+            class="message"
+            >Descripcion debe tener minimo 10 caracteres</span
+          >
+          <span
+            *ngIf="!validateDescription() && productForm.controls.description.errors?.['maxlength']"
+            class="message"
+            >Descripcion debe tener maximo 200 caracteres</span
+          >
+        </div>
+        <div class="row" [ngClass]="{ error: !validateLogo() }">
+          <label for="logo"><b>Logo</b></label>
+          <input type="text" formControlName="logo" id="logo" required />
+          <span
+            *ngIf="!validateLogo() && productForm.controls.logo.errors?.['required']"
+            class="message"
+            >Logo es requerido</span
+          >
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <label for="date_release"><b>Fecha Liberacion</b></label>
+          <input
+            type="text"
+            maxlength="10"
+            (input)="onDateReleaseChange()"
+            formControlName="date_release"
+            id="date_release"
+            placeholder="dd/mm/yyyy"
+            required
+          />
+        </div>
+        <div class="row">
+          <label for="date_revision"><b>Fecha Revision</b></label>
+          <input
+            (input)="onDateRevisionChange()"
+            maxlength="10"
+            type="text"
+            formControlName="date_revision"
+            id="date_revision"
+            required
+            placeholder="dd/mm/yyyy"
+          />
+        </div>
+      </div>
+      <div class="form__actions">
+        <button class="btn btn-secondary" type="reset">Reiniciar</button>
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="!productForm.valid"
+        >
+          Enviar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
