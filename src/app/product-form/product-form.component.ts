@@ -3,13 +3,15 @@ import { ProductService } from '../services/product.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Product } from '../model/product';
 import { Router } from '@angular/router';
+import { addOneYearToDate, formatDate } from '../utils/date';
 
 @Component({
   selector: 'app-product-form',
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.css'],
 })
-export class ProductFormComponent {
+export class ProductFormComponent implements OnInit {
+  selectedProduct: Product | null = null;
   productForm = new FormGroup({
     id: new FormControl('', [
       Validators.required,
@@ -27,10 +29,24 @@ export class ProductFormComponent {
       Validators.maxLength(200),
     ]),
     logo: new FormControl('', Validators.required),
-    date_release: new FormControl('', Validators.required),
-    date_revision: new FormControl('', Validators.required),
+    date_release: new FormControl('', [Validators.required]),
+    date_revision: new FormControl('', [Validators.required]),
   });
+
   constructor(private productService: ProductService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.selectedProduct = this.productService.selectedProduct;
+    if (this.selectedProduct) {
+      this.selectedProduct.date_release = formatDate(
+        new Date(this.selectedProduct.date_release)
+      );
+      this.selectedProduct.date_revision = formatDate(
+        new Date(this.selectedProduct.date_revision)
+      );
+      this.productForm.setValue(this.selectedProduct);
+    }
+  }
 
   validateName() {
     return (
@@ -60,43 +76,34 @@ export class ProductFormComponent {
     );
   }
 
+  validateReleaseDate() {
+    return (
+      this.productForm.controls.date_release.valid ||
+      this.productForm.controls.date_release.untouched
+    );
+  }
+
   saveProduct() {
     if (this.productForm.valid) {
-      this.productService.products.push(this.productForm.value as Product);
-      this.router.navigate(['products']);
+      if (this.selectedProduct) {
+        this.productService
+          .updateProduct(this.productForm.value as Product)
+          .subscribe(() => {
+            this.router.navigate(['/products']);
+          });
+      } else {
+        this.productService
+          .saveProduct(this.productForm.value as Product)
+          .subscribe(() => {
+            this.router.navigate(['/products']);
+          });
+      }
     }
   }
 
-  onDateRevisionChange() {
-    const formattedValue = this.formatDateText(
-      this.productForm.controls.date_revision.value ?? ''
-    );
-    this.productForm.controls.date_revision.setValue(formattedValue);
-  }
-
-  onDateReleaseChange() {
-    const formattedValue = this.formatDateText(
-      this.productForm.controls.date_release.value ?? ''
-    );
-    this.productForm.controls.date_release.setValue(formattedValue);
-  }
-
-  formatDateText(value: string): string {
-    const sanitizedValue = value?.replace(/\D/g, '') ?? '';
-    let formattedValue = '';
-    if (sanitizedValue.length >= 5) {
-      formattedValue =
-        sanitizedValue.slice(0, 2) +
-        '/' +
-        sanitizedValue.slice(2, 4) +
-        '/' +
-        sanitizedValue.slice(4);
-    } else if (sanitizedValue.length >= 3) {
-      formattedValue =
-        sanitizedValue.slice(0, 2) + '/' + sanitizedValue.slice(2);
-    } else {
-      formattedValue = sanitizedValue;
-    }
-    return formattedValue;
+  onDateReleaseChange(releaseDate: string) {
+    this.productForm.controls.date_release.setValue(releaseDate);
+    const revisionDate = addOneYearToDate(releaseDate);
+    this.productForm.controls.date_revision.setValue(formatDate(revisionDate));
   }
 }

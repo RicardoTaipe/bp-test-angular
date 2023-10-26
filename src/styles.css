@@ -84,6 +84,7 @@ select {
   --blue: rgb(36, 51, 99);
   --light-blue: rgb(233, 236, 243);
   --white: hsl(0, 0%, 100%);
+  --gray: rgb(230, 231, 231);
 }
 
 body {

@@ -79,28 +79,30 @@
         </div>
       </div>
       <div class="form-group">
-        <div class="row">
+        <div class="row" [ngClass]="{ error: !validateReleaseDate() }">
           <label for="date_release"><b>Fecha Liberacion</b></label>
           <input
-            type="text"
-            maxlength="10"
-            (input)="onDateReleaseChange()"
+            type="date"
+            #releaseDate
+            (change)="onDateReleaseChange(releaseDate.value)"
             formControlName="date_release"
             id="date_release"
-            placeholder="dd/mm/yyyy"
             required
           />
+          <span
+            *ngIf="!validateReleaseDate() && productForm.controls.date_release.errors?.['required']"
+            class="message"
+            >Fecha de liberacion es requerida</span
+          >
         </div>
         <div class="row">
           <label for="date_revision"><b>Fecha Revision</b></label>
           <input
-            (input)="onDateRevisionChange()"
-            maxlength="10"
-            type="text"
+            type="date"
             formControlName="date_revision"
             id="date_revision"
+            [readOnly]="true"
             required
-            placeholder="dd/mm/yyyy"
           />
         </div>
       </div>

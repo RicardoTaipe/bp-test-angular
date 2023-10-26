@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../services/product.service';
 import { Product } from '../model/product';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -8,15 +9,17 @@ import { Product } from '../model/product';
   styleUrls: ['./product-list.component.css'],
 })
 export class ProductListComponent implements OnInit {
+  isVisible: boolean = false;
   products: Product[] = [];
   visibleProducts: Product[] = [];
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService, private router: Router) {}
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe((data) => {
       this.products = data;
       this.visibleProducts = data;
     });
+    this.productService.selectedProduct = null;
   }
 
   search(term: string): void {
@@ -28,5 +31,33 @@ export class ProductListComponent implements OnInit {
       );
       this.visibleProducts = matchingProducts;
     }
+  }
+
+  editProduct(product: Product) {
+    this.productService.selectedProduct = product;
+    this.router.navigate(['/products/form']);
+  }
+
+  deleteProduct(product: Product) {
+    this.productService.selectedProduct = product;
+    this.isVisible = true;
+  }
+
+  showModal(onAnctionSelected: boolean) {
+    if (onAnctionSelected) {
+      this.productService.deleteProduct().subscribe(() => {
+        this.visibleProducts = this.visibleProducts.filter(
+          (p) => p !== this.productService.selectedProduct
+        );
+      });
+    } else {
+      this.productService.selectedProduct = null;
+    }
+
+    this.isVisible = false;
+  }
+
+  getProductName() {
+    return this.productService.selectedProduct?.name ?? '';
   }
 }

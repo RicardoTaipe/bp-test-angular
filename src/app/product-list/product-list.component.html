@@ -17,6 +17,7 @@
         <th>Descripcion</th>
         <th>Fecha de liberación</th>
         <th>Fecha de revisión</th>
+        <th>Opciones</th>
       </tr>
       <tr *ngFor="let product of visibleProducts">
         <td><img class="table-icon" [src]="product.logo" /></td>
@@ -24,6 +25,15 @@
         <td>{{ product.description }}</td>
         <td>{{ product.date_release | date : "dd/MM/YYYY" }}</td>
         <td>{{ product.date_revision | date : "dd/MM/YYYY" }}</td>
+        <td>
+          <div class="dropdown">
+            <span class="dropdown-icon">:</span>
+            <div class="dropdown-content">
+              <p (click)="editProduct(product)">Editar</p>
+              <p (click)="deleteProduct(product)">Eliminar</p>
+            </div>
+          </div>
+        </td>
       </tr>
     </table>
   </div>
@@ -36,3 +46,8 @@
     </select>
   </div>
 </div>
+<app-modal
+  *ngIf="isVisible"
+  [productName]="getProductName()"
+  (onActionSelected)="showModal($event)"
+></app-modal>

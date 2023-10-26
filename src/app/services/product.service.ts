@@ -9,51 +9,12 @@ import { catchError, map, tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class ProductService implements OnInit {
-  products: Product[] = [
-    // {
-    //   id: 'wzxRhnAq0W',
-    //   name: 'Tarjetas de credito 1',
-    //   description: 'Tarjeta de consumo bajo la modalidad de credito',
-    //   logo: 'https://www.visa.com.ec/dam/VCOM/regional/lac/SPA/Default/Pay%20With%20Visa/Tarjetas/visa-signature-400x225.jpg',
-    //   date_release: '2022-11-15T00:00:00.000+00:00',
-    //   date_revision: '2023-11-15T00:00:00.000+00:00',
-    // },
-    // {
-    //   id: 'wzxRhnAq1W',
-    //   name: 'Tarjetas de credito',
-    //   description: 'Tarjeta de consumo bajo la modalidad de credito',
-    //   logo: 'https://www.visa.com.ec/dam/VCOM/regional/lac/SPA/Default/Pay%20With%20Visa/Tarjetas/visa-signature-400x225.jpg',
-    //   date_release: '2023-02-01T00:00:00.000+00:00',
-    //   date_revision: '2024-02-01T00:00:00.000+00:00',
-    // },
-    // {
-    //   id: 'wzxRhnAq2W',
-    //   name: 'Tarjetas de credito',
-    //   description: 'Tarjeta de consumo bajo la modalidad de credito',
-    //   logo: 'https://www.visa.com.ec/dam/VCOM/regional/lac/SPA/Default/Pay%20With%20Visa/Tarjetas/visa-signature-400x225.jpg',
-    //   date_release: '2023-02-01T00:00:00.000+00:00',
-    //   date_revision: '2024-02-01T00:00:00.000+00:00',
-    // },
-    // {
-    //   id: 'wzxRhnAq3W',
-    //   name: 'Tarjetas de credito',
-    //   description: 'Tarjeta de consumo bajo la modalidad de credito',
-    //   logo: 'https://www.visa.com.ec/dam/VCOM/regional/lac/SPA/Default/Pay%20With%20Visa/Tarjetas/visa-signature-400x225.jpg',
-    //   date_release: '2023-02-01T00:00:00.000+00:00',
-    //   date_revision: '2024-02-01T00:00:00.000+00:00',
-    // },
-    // {
-    //   id: 'wzxRhnAq4W',
-    //   name: 'Tarjetas de credito',
-    //   description: 'Tarjeta de consumo bajo la modalidad de credito',
-    //   logo: 'https://www.visa.com.ec/dam/VCOM/regional/lac/SPA/Default/Pay%20With%20Visa/Tarjetas/visa-signature-400x225.jpg',
-    //   date_release: '2023-02-01T00:00:00.000+00:00',
-    //   date_revision: '2024-02-01T00:00:00.000+00:00',
-    // },
-  ];
+  selectedProduct: Product | null = null;
+
+  products: Product[] = [];
 
   httpOptions = {
-    headers: new HttpHeaders({ authorId: 333 }),
+    headers: new HttpHeaders({ authorId: 100 }),
   };
 
   constructor(private http: HttpClient) {}
@@ -83,9 +44,33 @@ export class ProductService implements OnInit {
       );
   }
 
+  updateProduct(product: Product): Observable<Product> {
+    return this.http
+      .put<Product>(
+        environment.apiUrl + '/bp/products',
+        product,
+        this.httpOptions
+      )
+      .pipe(
+        tap(() =>
+          console.log(`updated product w/ id=${this.selectedProduct?.id}`)
+        ),
+        catchError(this.handleError<Product>('updateProduct'))
+      );
+  }
+
+  deleteProduct() {
+    const url = `${environment.apiUrl}/bp/products?id=${this.selectedProduct?.id}`;
+
+    return this.http.delete<string>(url, this.httpOptions).pipe(
+      tap((_) => console.log(`deleted hero`)),
+      catchError(this.handleError<string>('deleteHero'))
+    );
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      console.error(error); // log to console instead
+      console.error(error);
 
       console.log(`${operation} failed: ${error.message}`);
 
